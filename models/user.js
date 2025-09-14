@@ -1,6 +1,20 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import Group from "./group.js";
+
+const groupSchema = new mongoose.Schema({
+  name: { type: String, required: true, unique: true },
+  permissions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Permission" }],
+});
+
+const Group = mongoose.model("Group", groupSchema);
+
+const permissionsSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+});
+
+const Permission = mongoose.model("Permission", permissionsSchema);
+
 const userSchema = new mongoose.Schema(
   {
     username: { type: String },
@@ -25,9 +39,14 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) {
-    return next();
-  }
-  this.password = await bcrypt;
-});
+// userSchema.pre("save", async function (next) {
+//   if (!this.isModified("password")) {
+//     return next();
+//   }
+//   this.password = await bcrypt;
+// });
+
+const User = mongoose.model("User", userSchema);
+
+export { Group, Permission };
+export default User;
