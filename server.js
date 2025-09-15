@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import { swaggerUi, swaggerSpec } from "./swagger.js";
 import connectDB from "./config/db.js";
 import User from "./models/user.js";
 import { Farm, Iot, Sensor, Reading } from "./models/farm.js";
@@ -13,6 +14,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.get("/users", async (req, res) => {
   const users = await User.find();
