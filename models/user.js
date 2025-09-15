@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-import Group from "./group.js";
 
 const groupSchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true },
