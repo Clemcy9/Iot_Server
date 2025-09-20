@@ -1,9 +1,8 @@
-import bycrypt from "bcrypt";
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import express from "express";
 import User from "../models/user.js";
 import authMiddleware, { createToken } from "../middleware/authMiddleware.js";
-import { use } from "react";
 
 const router = express.Router();
 
@@ -47,7 +46,7 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ msg: "User already exists" });
     }
 
-    const hashedPassword = await bycrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
       ...req.body,
       password: hashedPassword,
@@ -74,7 +73,7 @@ router.post("/register", async (req, res) => {
  *               password: "password123"
  *     responses:
  *       200:
- *         description: User logged in successfully, token: <token>
+ *         description: "User logged in successfully, token: <token>"
  *       401:
  *         description: Invalid credentials
  */
@@ -88,7 +87,7 @@ router.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) return res.status(401).json({ msg: "invalid credentials" });
-    const compare_pswd = await bycrypt.compare(password, user.password);
+    const compare_pswd = await bcrypt.compare(password, user.password);
     if (!compare_pswd) {
       return res.status(401).json({ msg: "invalid credentials" });
     }
