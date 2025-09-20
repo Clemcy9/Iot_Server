@@ -7,6 +7,33 @@ import { use } from "react";
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Auth
+ *   description: Authentication management
+ */
+
+// create auth routes
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             example:
+ *               email: "clement@gmail.com"
+ *               password: "password123"
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ * */
+
 // register user
 router.post("/register", async (req, res) => {
   const { email, password } = req.body;
@@ -25,13 +52,32 @@ router.post("/register", async (req, res) => {
       ...req.body,
       password: hashedPassword,
     });
-    const token = createToken(user);
-    res.status(201).json({ token });
+    res.status(201).json({ msg: "user created" });
   } catch (error) {
     res.status(500).json({ msg: "Server error", error });
   }
 });
 
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     summary: Login a user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             example:
+ *               email: "clement@gmail.com"
+ *               password: "password123"
+ *     responses:
+ *       200:
+ *         description: User logged in successfully, token: <token>
+ *       401:
+ *         description: Invalid credentials
+ */
 // login user
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
@@ -54,3 +100,5 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ msg: "Server error", error });
   }
 });
+
+export default router;

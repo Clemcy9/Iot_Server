@@ -9,6 +9,7 @@ import farmRoutes from "./routes/farmRoutes.js";
 import iotRoutes from "./routes/iotRoutes.js";
 import sensorRoutes from "./routes/sensorRoutes.js";
 import readingRoutes from "./routes/readingRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 connectDB();
 
@@ -30,6 +31,9 @@ app.post("/users", (req, res) => {
     .then((user) => res.status(201).json({ message: user }))
     .catch((err) => res.status(400).json({ error: err.message }));
 });
+
+// authentication
+app.use("/auth", authRoutes);
 
 // farms routes
 app.use("/farms", farmRoutes);
