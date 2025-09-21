@@ -93,7 +93,9 @@ router.get("/iot/:iotId", async (req, res) => {
  */
 // get a sensor (temp_sensor) readings for a particular iot node
 router.get("/iot/:sensorId", async (req, res) => {
-  const sensor_readings = Sensor.findById(req.params["sensorId"]).populate();
+  const sensor_readings = Sensor.findById(req.params["sensorId"]).populate(
+    "readings"
+  );
   res.status(200).json(sensor_readings);
 });
 
@@ -134,5 +136,9 @@ router.delete("/:id", async (req, res) => {
   const reading = await Reading.findByIdAndDelete(req.params["id"]);
   res.status(200).json(reading);
 });
+
+// user only related readings
+
+// gat a sensor readings of a particular user
 
 export default router;

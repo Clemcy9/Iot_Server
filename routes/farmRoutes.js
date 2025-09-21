@@ -61,6 +61,42 @@ router.get("/", async (req, res) => {
   }
 });
 
+// get farm by user
+/**
+ * @swagger
+ * /farms/{id}:
+ *   get:
+ *     summary: Get a farm by UserID
+ *     tags: [Farms]
+ *     parameters:
+ *       - in: path
+ *         name: userid
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The User ID
+ *     responses:
+ *       200:
+ *         description: Farm data
+ *       404:
+ *         description: Farm not found
+ */
+// Get a specific farm by ID
+router.get("user/:id", async (req, res) => {
+  try {
+    const farm = await Farm.find({ owner: req.params.id }).populate({
+      path: "iot",
+      populate: { path: "sensor" },
+    });
+    if (!farm) {
+      return res.status(404).json({ message: "Farm not found" });
+    }
+    res.status(200).json(farm);
+  } catch (err) {
+    res.status(404).json({ errror: err.message });
+  }
+});
+
 /**
  * @swagger
  * /farms/{id}:
