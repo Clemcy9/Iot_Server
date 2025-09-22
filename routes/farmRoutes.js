@@ -1,6 +1,7 @@
 import express from "express";
 import { Farm } from "../models/farm.js";
 import { populate } from "dotenv";
+import authmiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -34,13 +35,14 @@ const router = express.Router();
 // Create a new farm
 router.post("/", async (req, res) => {
   try {
-    const farm = await Farm.create(req.body);
+    const farm = await Farm.create(req.body, { owner: req.user._id });
     res.status(201).json(farm);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 });
 
+// Get all farms
 /**
  * @swagger
  * /farms:
@@ -51,49 +53,12 @@ router.post("/", async (req, res) => {
  *       200:
  *         description: List of farms
  */
-// Get all farms
 router.get("/", async (req, res) => {
   try {
     const farms = await Farm.find().populate("iot");
     res.status(200).json(farms);
   } catch (err) {
     res.status(500).json({ error: err.message });
-  }
-});
-
-// get farm by user
-/**
- * @swagger
- * /farms/{id}:
- *   get:
- *     summary: Get a farm by UserID
- *     tags: [Farms]
- *     parameters:
- *       - in: path
- *         name: userid
- *         required: true
- *         schema:
- *           type: string
- *         description: The User ID
- *     responses:
- *       200:
- *         description: Farm data
- *       404:
- *         description: Farm not found
- */
-// Get a specific farm by ID
-router.get("user/:id", async (req, res) => {
-  try {
-    const farm = await Farm.find({ owner: req.params.id }).populate({
-      path: "iot",
-      populate: { path: "sensor" },
-    });
-    if (!farm) {
-      return res.status(404).json({ message: "Farm not found" });
-    }
-    res.status(200).json(farm);
-  } catch (err) {
-    res.status(404).json({ errror: err.message });
   }
 });
 

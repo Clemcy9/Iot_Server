@@ -77,7 +77,9 @@ router.get("/", async (req, res) => {
 // Get a Iot by ID
 router.get("/:id", async (req, res) => {
   try {
-    const iot = await Iot.findById(req.params["id"]).populate("sensor");
+    const iot = await Iot.findById(req.params["id"]).populate({
+      path: "sensors",
+    });
     if (!iot) {
       return res.status(404).json({ message: "Iot not found" });
     }

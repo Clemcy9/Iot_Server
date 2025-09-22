@@ -38,6 +38,14 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+userSchema.virtual("farm", {
+  ref: "Farm",
+  localField: "_id",
+  foreignField: "owner",
+});
+
+userSchema.set("toObject", { virtuals: true });
+userSchema.set("toJSON", { virtuals: true });
 // userSchema.pre("save", async function (next) {
 //   if (!this.isModified("password")) {
 //     return next();

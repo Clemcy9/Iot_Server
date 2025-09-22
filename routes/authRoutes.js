@@ -56,26 +56,48 @@ router.post("/register", async (req, res) => {
     res.status(500).json({ msg: "Server error", error });
   }
 });
+/**
+ * @swagger
+ * tags:
+ *   name: Auth
+ *   description: Authentication management
+ */
 
 /**
  * @swagger
  * /auth/login:
  *   post:
- *     summary: Login a user
+ *     summary: Login a user and get JWT token
  *     tags: [Auth]
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             example:
- *               email: "clement@gmail.com"
- *               password: "password123"
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: "clement@gmail.com"
+ *               password:
+ *                 type: string
+ *                 example: "password123"
  *     responses:
  *       200:
- *         description: "User logged in successfully, token: <token>"
+ *         description: Successful login
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   description: JWT token
  *       401:
- *         description: Invalid credentials
+ *         description: Unauthorized (invalid credentials)
  */
 // login user
 router.post("/login", async (req, res) => {

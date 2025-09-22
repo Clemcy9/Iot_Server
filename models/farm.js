@@ -37,10 +37,11 @@ const iotSchema = mongoose.Schema(
   }
 );
 
-iotSchema.virtual("sensor", {
+iotSchema.virtual("sensors", {
   ref: "Sensor",
   localField: "_id",
   foreignField: "iot",
+  justOne: false,
 });
 
 iotSchema.set("toObject", { virtuals: true });

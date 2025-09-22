@@ -9,6 +9,28 @@ const options = {
       version: "1.0.0",
       description: "API documentation for Hydroponics project",
     },
+    servers: [
+      {
+        url: "http://localhost:5000", // adjust for prod
+      },
+      // {
+      //   url: "https://localhost:3000", // adjust for prod
+      // },
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
   },
   apis: ["./routes/*.js"], // adjust path to where your routes are
 };

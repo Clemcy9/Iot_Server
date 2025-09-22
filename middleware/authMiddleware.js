@@ -4,10 +4,11 @@ import jwt from "jsonwebtoken";
 // auth middleware to protect routes
 
 const authMiddleware = (req, res, next) => {
+  console.log("auth middleware reached");
   // check for token in headers
   const token = req.headers["authorization"]?.split(" ")[1];
   if (!token) {
-    res.status(401).json({ msg: "unauthorized, no token" });
+    return res.status(401).json({ msg: "unauthorized, no token" });
   }
 
   // verify token
@@ -16,7 +17,7 @@ const authMiddleware = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (error) {
-    res.status(401).json({ msg: "unauthorized, invalid token" });
+    return res.status(401).json({ msg: "unauthorized, invalid token" });
   }
 };
 

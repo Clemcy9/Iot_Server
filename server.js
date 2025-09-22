@@ -10,6 +10,7 @@ import iotRoutes from "./routes/iotRoutes.js";
 import sensorRoutes from "./routes/sensorRoutes.js";
 import readingRoutes from "./routes/readingRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 connectDB();
 
@@ -21,16 +22,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-app.get("/users", async (req, res) => {
-  const users = await User.find();
-  res.status(200).json({ users });
-});
-
-app.post("/users", (req, res) => {
-  User.create(req.body)
-    .then((user) => res.status(201).json({ message: user }))
-    .catch((err) => res.status(400).json({ error: err.message }));
-});
+// users
+app.use("/user", userRoutes);
 
 // authentication
 app.use("/auth", authRoutes);
