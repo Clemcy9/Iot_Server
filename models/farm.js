@@ -37,8 +37,17 @@ const iotSchema = mongoose.Schema(
   }
 );
 
+// 🔹 Virtual relation to sensors
 iotSchema.virtual("sensors", {
   ref: "Sensor",
+  localField: "_id",
+  foreignField: "iot",
+  justOne: false,
+});
+
+// 🔹 Virtual relation to actuators
+iotSchema.virtual("actuators", {
+  ref: "Actuator",
   localField: "_id",
   foreignField: "iot",
   justOne: false,
@@ -72,10 +81,35 @@ sensorSchema.set("toJSON", { virtuals: true });
 
 const Sensor = mongoose.model("Sensor", sensorSchema);
 
+// actuator
+const actuatorSchema = mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    type: { type: String },
+    measurement_unit: String,
+    iot: { type: mongoose.Schema.Types.ObjectId, ref: "Iot" },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+actuatorSchema.virtual("readings", {
+  ref: "Reading",
+  localField: "_id",
+  foreignField: "actuator",
+});
+
+actuatorSchema.set("toObject", { virtuals: true });
+actuatorSchema.set("toJSON", { virtuals: true });
+
+const Actuator = mongoose.model("Actuator", actuatorSchema);
+
 const readingSchema = mongoose.Schema(
   {
     readings: [{ value: String, timestamp: Date }],
     sensor: { type: mongoose.Schema.Types.ObjectId, ref: "Sensor" },
+    actuator: { type: mongoose.Schema.Types.ObjectId, ref: "Actuator" },
   },
   {
     timestamps: true,
@@ -84,4 +118,4 @@ const readingSchema = mongoose.Schema(
 
 const Reading = mongoose.model("Reading", readingSchema);
 
-export { Farm, Iot, Sensor, Reading };
+export { Farm, Iot, Sensor, Actuator, Reading };

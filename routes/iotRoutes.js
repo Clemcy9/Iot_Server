@@ -1,6 +1,5 @@
 import express from "express";
-import { Iot, Sensor } from "../models/farm.js";
-import mongoose from "mongoose";
+import { Iot, Sensor, Actuator } from "../models/farm.js";
 
 const router = express.Router();
 
@@ -36,24 +35,14 @@ const router = express.Router();
 router.post("/register", async (req, res) => {
   console.log("hello from iot/register");
 
-  // using mongoose session to achieve db atomic transanctions (create all or none)
-  const session = await mongoose.startSession();
-  session.startTransaction();
-
   try {
     // 1️⃣ Create IoT
-    const iot_doc = await Iot.create(
-      [
-        {
-          name: req.body.name || "default_name",
-          status: req.body.status || "active",
-          farm: req.body.farm || null,
-        },
-      ],
-      { session }
-    );
+    const iot = await Iot.create({
+      name: req.body.name || "default_name",
+      status: req.body.status || "active",
+      farm: req.body.farm || null,
+    });
 
-    const iot = iot_doc[0];
     console.log("iot is:", iot);
 
     // if using urlencode to send array, convert from string first
@@ -70,30 +59,36 @@ router.post("/register", async (req, res) => {
         iot: iot._id,
       }));
 
-      createdSensors = await Sensor.insertMany(updated_sensors, { session });
+      createdSensors = await Sensor.insertMany(updated_sensors);
       console.log("sensors created:", createdSensors);
     }
 
-    // perform all transactions (commit if everything ok)
-    await session.commitTransaction();
-    session.endSession();
+    // 2️⃣ Create actuators (if provided)
+    const actuators = Array.isArray(req.body.actuators)
+      ? req.body.actuators
+      : [];
+
+    let createdActuators = [];
+    if (actuators.length > 0) {
+      const updated_actuators = actuators.map((actuator) => ({
+        ...actuator,
+        iot: iot._id,
+      }));
+
+      createdActuators = await Actuator.insertMany(updated_actuators);
+      console.log("actuators created:", createdActuators);
+    }
 
     // 3️⃣ Single response
     res.status(201).json({
       message: "IoT and sensors created successfully",
       iot,
       sensors: createdSensors,
+      actuators: createdActuators,
     });
   } catch (error) {
-    // reverse all transactions if failure
-    await session.abortTransaction();
-    session.endSession();
     console.error(error);
-    res
-      .status(400)
-      .json({
-        msg: `IoT registration failed, all changes rolled back: ${error.message}`,
-      });
+    res.status(400).json({ msg: `IoT registration failed: ${error.message}` });
   }
 });
 
