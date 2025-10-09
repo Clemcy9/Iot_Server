@@ -28,8 +28,8 @@ const Farm = mongoose.model("Farm", farmSchema);
 
 const iotSchema = mongoose.Schema(
   {
-    name: { type: String, required: true },
-    status: [{ type: String, default: "active" }],
+    name: { type: String },
+    status: { type: String, enum: ["active", "inactive"], default: "active" },
     farm: { type: mongoose.Schema.Types.ObjectId, ref: "Farm" },
   },
   {
@@ -52,7 +52,7 @@ const Iot = mongoose.model("Iot", iotSchema);
 const sensorSchema = mongoose.Schema(
   {
     name: { type: String, required: true },
-    type: { type: String, required: true },
+    type: { type: String },
     measurement_unit: String,
     iot: { type: mongoose.Schema.Types.ObjectId, ref: "Iot" },
   },
