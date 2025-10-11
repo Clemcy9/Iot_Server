@@ -69,10 +69,13 @@ router.post("/", async (req, res) => {
 router.get("/iot/:iotId", async (req, res) => {
   // const readings = await Reading.find()
   try {
-    const iot_readings = Iot.findById(req.params["iotId"]).populate("sensor");
+    const iot_readings = await Iot.findById(req.params["iotId"])
+      .populate("sensors")
+      .select("-createdAt -updatedAt -id ");
 
     res.status(200).json(iot_readings);
   } catch (error) {
+    console.log("error:", error);
     res.status(400).json(error);
   }
 });

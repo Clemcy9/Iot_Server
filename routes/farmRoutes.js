@@ -33,9 +33,10 @@ const router = express.Router();
  */
 
 // Create a new farm
-router.post("/", async (req, res) => {
+router.post("/", authmiddleware, async (req, res) => {
   try {
-    const farm = await Farm.create(req.body, { owner: req.user._id });
+    console.log("payload:", req.body);
+    const farm = await Farm.create({ ...req.body, owner: req.user._id });
     res.status(201).json(farm);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -86,7 +87,7 @@ router.get("/:id", async (req, res) => {
   try {
     const farm = await Farm.findById(req.params.id).populate({
       path: "iot",
-      populate: { path: "sensor" },
+      populate: { path: "sensors" },
     });
     if (!farm) {
       return res.status(404).json({ message: "Farm not found" });

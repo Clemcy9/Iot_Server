@@ -40,7 +40,7 @@ const iotSchema = mongoose.Schema(
   }
 );
 
-// 🔹 Virtual relation to sensors
+// Virtual relation to sensors
 iotSchema.virtual("sensors", {
   ref: "Sensor",
   localField: "_id",

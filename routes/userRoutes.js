@@ -36,7 +36,8 @@ const router = express.Router();
 // Create a new farm
 router.post("/farms", authMiddleware, async (req, res) => {
   try {
-    const farm = await Farm.create(req.body, { owner: req.user._id });
+    console.log("payload:", req.body);
+    const farm = await Farm.create({ ...req.body, owner: req.user._id });
     res.status(201).json(farm);
   } catch (err) {
     res.status(400).json({ error: err.message });

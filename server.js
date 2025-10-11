@@ -40,9 +40,9 @@ app.use("/sensors", sensorRoutes);
 // Readings routes for admin (only admin see's all readings)
 app.use("/readings", readingRoutes);
 
-// app.listen(process.env.PORT, () =>
-//   console.log("server running on port", process.env.PORT)
-// );
+app.listen(process.env.PORT, () =>
+  console.log("server running on port", process.env.PORT)
+);
 
-// running on local ip
-app.listen(5000, "0.0.0.0", () => console.log("running on local ip"));
+// // running on local ip
+// app.listen(5000, "0.0.0.0", () => console.log("running on local ip"));
