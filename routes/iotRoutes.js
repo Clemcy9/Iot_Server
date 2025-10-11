@@ -16,6 +16,7 @@ const router = express.Router();
  * /iot/register:
  *   post:
  *     summary: Register new Iot
+ *     description: endpoint to register your iot devices
  *     tags: [Iot]
  *     requestBody:
  *       required: true

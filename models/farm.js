@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 
+// remove the _v versioning from payload
+mongoose.set("toJSON", { versionKey: false });
+
 const farmSchema = mongoose.Schema(
   {
     name: { type: String, required: true, unique: true },
@@ -107,7 +110,7 @@ const Actuator = mongoose.model("Actuator", actuatorSchema);
 
 const readingSchema = mongoose.Schema(
   {
-    readings: [{ value: String, timestamp: Date }],
+    value: { type: String, required: true },
     sensor: { type: mongoose.Schema.Types.ObjectId, ref: "Sensor" },
     actuator: { type: mongoose.Schema.Types.ObjectId, ref: "Actuator" },
   },

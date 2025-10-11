@@ -39,8 +39,10 @@ const router = express.Router();
  */
 //create readings
 router.post("/", async (req, res) => {
+  const payload = req.body["sensors"] || [];
+  if (!payload.length) return res.status(400).json({ msg: "empty payload" });
   try {
-    const readings = await Reading.insertMany(req.body);
+    const readings = await Reading.insertMany(payload);
     res.status(201).json(readings);
   } catch (error) {
     res.status(400).json(error);
