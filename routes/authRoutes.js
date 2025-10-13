@@ -122,4 +122,42 @@ router.post("/login", async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /auth/forgot-password:
+ *   post:
+ *     summary: Request password reset
+ *     description: Endpoint to request for password reset, email is required
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             example:
+ *               email: "clement@gmail.com"
+ *     responses:
+ *       200:
+ *         description: reset link sent to email
+ *       400:
+ *         description: request email does not exist
+
+ * */
+// forget password
+router.post("/forgot-password", async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(400).json({ error: "email does not exist" });
+  }
+
+  const token = createToken(user, 31);
+  const reset_link = `${req.protocol}://${req.get(
+    "host"
+  )}/auth/reset-password/${token}`;
+
+  // display link on console for now
+  console.log("password request processed, reset link=", reset_link);
+});
+
 export default router;

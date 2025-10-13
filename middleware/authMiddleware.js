@@ -24,14 +24,25 @@ const authMiddleware = (req, res, next) => {
 export default authMiddleware;
 
 // create jwt token
-export const createToken = (user) => {
+export const createToken = (user, is_password_reset_token = 0) => {
+  if (is_password_reset_token) {
+    console.log("create token for pswd reset called");
+    return jwt.sign(
+      {
+        id: user._id,
+        email: user.email,
+        isAdmin: user.isAdmin,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: `${is_password_reset_token}m` }
+    );
+  }
   return jwt.sign(
     {
       id: user._id,
       email: user.email,
       isAdmin: user.isAdmin,
     },
-    process.env.JWT_SECRET,
-    { expiresIn: "1d" }
+    process.env.JWT_SECRET
   );
 };
