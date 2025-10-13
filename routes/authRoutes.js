@@ -158,6 +158,33 @@ router.post("/forgot-password", async (req, res) => {
 
   // display link on console for now
   console.log("password request processed, reset link=", reset_link);
+  // send email
+  res.status(200).json({ msg: "check email for reset link" });
+});
+
+// password reset
+router.post("/reset-password/:token", async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+
+    if (!user) {
+      return res.status(400).json({ error: "invalid user" });
+    }
+    user.password = password;
+    await user.save();
+    res.status(200).json({ msg: "password reset successfull" });
+  } catch (error) {
+    if (error.name === "TokenExpiredError") {
+      return res
+        .status(400)
+        .json({ err: "token has expired, pls request new reset link" });
+    }
+    res.status(400).json({ err: "Invalid or expired token" });
+  }
 });
 
 export default router;
