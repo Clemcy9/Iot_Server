@@ -49,7 +49,7 @@ router.post("/register", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
       ...req.body,
-      password: hashedPassword,
+      // password: hashedPassword, //password is hashed at user pre save hook model
     });
     res.status(201).json({ msg: "user created" });
   } catch (error) {
