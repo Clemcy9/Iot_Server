@@ -17,7 +17,7 @@ const router = express.Router();
  * @swagger
  * /farms:
  *   post:
- *     summary: Create a new farm
+ *     summary: Create a new farm,[auth required]
  *     tags: [Farms]
  *     requestBody:
  *       required: true
