@@ -151,7 +151,7 @@ router.post("/forgot-password", async (req, res) => {
     return res.status(400).json({ error: "email does not exist" });
   }
 
-  const token = createToken(user, 31);
+  const token = createToken(user, 11);
   const reset_link = `${req.protocol}://${req.get(
     "host"
   )}/auth/reset-password/${token}`;
