@@ -22,6 +22,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+// hello packects
+app.get("/hello", (req, res) => {
+  res.status(200).json({ message: "hello world" });
+});
 // users
 app.use("/user", userRoutes);
 
