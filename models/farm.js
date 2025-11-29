@@ -110,6 +110,8 @@ const Actuator = mongoose.model("Actuator", actuatorSchema);
 
 const readingSchema = mongoose.Schema(
   {
+    name: String,
+    delay_count: Number,
     value: { type: String, required: true },
     sensor: { type: mongoose.Schema.Types.ObjectId, ref: "Sensor" },
     actuator: { type: mongoose.Schema.Types.ObjectId, ref: "Actuator" },
